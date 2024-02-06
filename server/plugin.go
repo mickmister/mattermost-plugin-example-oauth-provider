@@ -50,13 +50,27 @@ func (p *Plugin) handleWebhookRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p *Plugin) handleCommandRequest(w http.ResponseWriter, r *http.Request) {
+	conf := p.getConfiguration()
+
 	authHeader := r.Header.Get("Authorization")
 	parts := strings.Split(authHeader, " ")
 	tokenType, accessToken := parts[0], parts[1]
 
-	msg := fmt.Sprintf("token type: '%s' access token: '%s'", tokenType, accessToken)
+	w.Header().Add("Content-Type", "application/json")
 
-	// TODO make a plugin setting and verify token matches here
+	if tokenType != "Bearer" {
+		responseBody := map[string]string{"error": "Invalid value for token type. Expected 'Bearer'. Got " + tokenType + " " + accessToken}
+		b, _ := json.Marshal(responseBody)
+		http.Error(w, string(b), http.StatusBadRequest)
+		return
+	}
+
+	if accessToken != conf.AccessToken {
+		http.Error(w, `{"error": "Invalid access token provided"}`, http.StatusBadRequest)
+		return
+	}
+
+	msg := fmt.Sprintf("token type: '%s' access token: '%s'", tokenType, accessToken)
 
 	commandResponse := model.CommandResponse{
 		Text:         msg,
@@ -73,12 +87,34 @@ func (p *Plugin) handleCommandRequest(w http.ResponseWriter, r *http.Request) {
 func (p *Plugin) handleTokenRequest(w http.ResponseWriter, r *http.Request) {
 	conf := p.getConfiguration()
 
+	w.Header().Add("Content-Type", "application/json")
+
+	r.ParseForm()
+
+	clientId := r.Form.Get("client_id")
+	clientSecret := r.Form.Get("client_secret")
+	grantType := r.Form.Get("grant_type")
+
+	if clientId != conf.ExpectedClientId {
+		http.Error(w, `{"error": "Invalid value for client id"}`, http.StatusBadRequest)
+		return
+	}
+
+	if clientSecret != conf.ExpectedClientSecret {
+		http.Error(w, `{"error": "Invalid value for client secret"}`, http.StatusBadRequest)
+		return
+	}
+
+	if grantType != "client_credentials" {
+		http.Error(w, `{"error": "Invalid value for grant_type. Should be client_credentials."}`, http.StatusBadRequest)
+		return
+	}
+
 	tokenResponse := TokenResponse{
 		AccessToken: conf.AccessToken,
 		TokenType:   "Bearer",
 	}
 
-	w.Header().Add("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(tokenResponse)
 	if err != nil {
 		p.API.LogError("failed to marshal token response", "err", err.Error())
