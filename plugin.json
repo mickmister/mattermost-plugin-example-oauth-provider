@@ -1,7 +1,7 @@
 {
-    "id": "com.mattermost.plugin-starter-template",
-    "name": "Plugin Starter Template",
-    "description": "This plugin serves as a starting point for writing a Mattermost plugin.",
+    "id": "oauth-provider-example",
+    "name": "Example OAuth Provider",
+    "description": "This plugin helps streamline testing of the Outgoing OAuth Connections feature",
     "homepage_url": "https://github.com/mattermost/mattermost-plugin-starter-template",
     "support_url": "https://github.com/mattermost/mattermost-plugin-starter-template/issues",
     "icon_path": "assets/starter-template-icon.svg",
@@ -18,6 +18,31 @@
     "settings_schema": {
         "header": "",
         "footer": "",
-        "settings": []
+        "settings": [
+            {
+                "key": "ExpectedClientID",
+                "display_name": "Expected Client Id:",
+                "type": "text",
+                "help_text": "",
+                "placeholder": "",
+                "default": "example_client_id"
+            },
+            {
+                "key": "ExpectedClientSecret",
+                "display_name": "Expected Client Secret:",
+                "type": "text",
+                "help_text": "",
+                "placeholder": "",
+                "default": "example_client_secret"
+            },
+            {
+                "key": "AccessToken",
+                "display_name": "Access Token to return:",
+                "type": "text",
+                "help_text": "",
+                "placeholder": "",
+                "default": "example_access_token"
+            }
+        ]
     }
 }
