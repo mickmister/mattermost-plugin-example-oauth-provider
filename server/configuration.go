@@ -7,7 +7,7 @@ import (
 )
 
 type configuration struct {
-	ExpectedClientId     string
+	ExpectedClientID     string
 	ExpectedClientSecret string
 	AccessToken          string
 }

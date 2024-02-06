@@ -20,7 +20,7 @@
         "footer": "",
         "settings": [
             {
-                "key": "ExpectedClientId",
+                "key": "ExpectedClientID",
                 "display_name": "Expected Client Id:",
                 "type": "text",
                 "help_text": "",

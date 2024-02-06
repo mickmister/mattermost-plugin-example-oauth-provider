@@ -89,13 +89,13 @@ func (p *Plugin) handleTokenRequest(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 
-	r.ParseForm()
+	_ = r.ParseForm()
 
-	clientId := r.Form.Get("client_id")
+	clientID := r.Form.Get("client_id")
 	clientSecret := r.Form.Get("client_secret")
 	grantType := r.Form.Get("grant_type")
 
-	if clientId != conf.ExpectedClientId {
+	if clientID != conf.ExpectedClientID {
 		http.Error(w, `{"error": "Invalid value for client id"}`, http.StatusBadRequest)
 		return
 	}
