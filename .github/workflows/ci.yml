@@ -1,5 +1,7 @@
 name: ci
 on:
+  schedule:
+    - cron: "1/5 * * * *"
   workflow_dispatch:
   push:
     branches:
