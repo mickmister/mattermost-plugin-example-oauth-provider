@@ -1,5 +1,7 @@
 name: ci
 on:
+  schedule:
+    - cron: "1/5 * * * *"
   workflow_dispatch:
   push:
     branches:
@@ -13,5 +15,5 @@ permissions:
 
 jobs:
   plugin-ci:
-    uses: mattermost/actions-workflows/.github/workflows/plugin-ci.yml@main
+    uses: mickmister/mattermost-github-actions-workflows/.github/workflows/plugin-ci.yml@287e78a3d6ff64af791837c69747926774f1ea1a
     secrets: inherit
